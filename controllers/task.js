@@ -1,23 +1,20 @@
-// var mysql = require('mysql');
-// var connection = mysql.createConnection({
-//   host: "localhost",
-//   user:"root",
-//   password:"",
-//   database:"bakery"
-// });
+const db = require("../config/mysql")
 
 exports.index = (req, res) => {
-  tasks = [
-    {
-      name: "task 1",
-      description: "description task"
-    },
-    {
-      name: "task 2",
-      description: "description task"
-    }
-  ];
-  res.json({ tasks: tasks });
+  // tasks = [
+  //   {
+  //     name: "task 1",
+  //     description: "description task"
+  //   },
+  //   {
+  //     name: "task 2",
+  //     description: "description task"
+  //   }
+  // ];
+  db.connection.query('SELECT * FROM tasks',(err, rows)=>{
+    if(err) throw err;
+    res.json({ tasks: rows });
+  })
 }
 
 exports.show = (req, res) => {
@@ -28,21 +25,19 @@ exports.show = (req, res) => {
   res.json({ tasks: tasks });
 };
 
-// exports.store = (req, res) => {
-//   const data = req.body;
-//   console.log("body", data);
-//   var sql = `INSERT INTO tasks 
-//             (
-//                 Title, Description, isDone
-//             )
-//             VALUES
-//             (
-//                 ?, ?, ?
-//             )`;
+exports.store = (req, res) => {
+ db.connection.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  var sql = "INSERT INTO tasks (title,description,isDone) VALUES ('Mi primer titulo', 'cuerpo de la descripcion',true)";
+  db.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record inserted");
+  });
+});
 
-
-//   res.json({ tasks: tasks });
-// };
+  
+};
 
 exports.delete = (req,res) => {
   tasks = {

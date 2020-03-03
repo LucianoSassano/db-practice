@@ -6,6 +6,9 @@ const morgan = require('morgan')
 var bodyParser = require('body-parser')
 require('dotenv').config()
 
+console.log( process.env.DB_NAME);
+
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
  
