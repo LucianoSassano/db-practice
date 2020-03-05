@@ -1,7 +1,7 @@
 const db = require("../config/mysql");
 
 exports.index = (req, res) => {
-  tasks= [];
+  tasks = [];
   db.connection.query("SELECT * FROM tasks", (err, rows) => {
     if (err) throw err;
     res.json({ tasks: rows });
@@ -9,35 +9,49 @@ exports.index = (req, res) => {
 };
 
 exports.show = (req, res) => {
-  tasks=[]
-  db.connection.query(`SELECT * FROM tasks WHERE task_id =${req.params.id}`,(err,rows)=>{
-    if(err) throw err;
-    res.json({tasks:rows});
-  })
-  
+  tasks = [];
+  db.connection.query(
+    `SELECT * FROM tasks WHERE task_id =${req.params.id}`,
+    (err, rows) => {
+      if (err) throw err;
+      
+      if (!rows[0]) {
+        res.status(404).json( { tasks: {}})
+        return
+      }
+
+      res.json({ tasks: rows[0] });
+    }
+  );
 };
 
 exports.store = (req, res) => {
+  let sql =
+    "INSERT INTO tasks (title,description,isDone) VALUES ('Mi segunda tarea', 'segunda descripcion',true)";
+  db.connection.query(sql, (err, rows) => {
+    if (err) throw err;
 
- 
-    let sql =
-      "INSERT INTO tasks (title,description,isDone) VALUES ('Mi segunda tarea', 'segunda descripcion',true)";
-      db.connection.query(sql,(err,rows)=>{
-        if(err) throw err;
-        else{
-          console.log("sucess")
-        }
-      })
-  
+    console.log("sucess");
+    res.status(200).json("success")
+  });
 };
 
-exports.delete = (req, res) => {
-  
-  db.connection.query(`DELETE FROM tasks WHERE task_id = ${req.params.id}`,(err,rows) =>{
-    if (err) throw err;
-      res.json((`se borro correctamente la tarea ${req.params.id}`))
-    
+exports.update = (req,res) =>{
+  const {title ,description , isDone} = req.body;
+  let sql = `UPDATE tasks SET title = '${title}',description='${description}',isDone=${isDone} WHERE task_id=${req.params.id}`
+  db.connection.query(sql,(err,rows)=>{
+    if(err) throw err;
 
+    res.status(200).json(`se modifico la tarea id numero : ${req.params.id}`)
   })
+}
 
+exports.delete = (req, res) => {
+  db.connection.query(
+    `DELETE FROM tasks WHERE task_id = ${req.params.id}`,
+    (err, rows) => {
+      if (err) throw err;
+      res.json(`se borro correctamente la tarea ${req.params.id}`);
+    }
+  );
 };
