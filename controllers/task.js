@@ -26,13 +26,12 @@ exports.show = (req, res) => {
 };
 
 exports.store = (req, res) => {
+  const {title,description,isDone} = req.body;
   let sql =
-    "INSERT INTO tasks (title,description,isDone) VALUES ('Mi segunda tarea', 'segunda descripcion',true)";
+  `INSERT INTO tasks (title,description,isDone) VALUES ('${title}', '${description}',${isDone})`;
   db.connection.query(sql, (err, rows) => {
     if (err) throw err;
-
-    console.log("sucess");
-    res.status(200).json("success")
+    res.status(200).json("task insertion success")
   });
 };
 
