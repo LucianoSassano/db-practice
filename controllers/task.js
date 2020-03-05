@@ -18,16 +18,17 @@ exports.show = (req, res) => {
 };
 
 exports.store = (req, res) => {
-  db.connection.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-    var sql =
-      "INSERT INTO tasks (title,description,isDone) VALUES ('Mi primer titulo', 'cuerpo de la descripcion',true)";
-    db.query(sql, function(err, result) {
-      if (err) throw err;
-      console.log("1 record inserted");
-    });
-  });
+
+ 
+    let sql =
+      "INSERT INTO tasks (title,description,isDone) VALUES ('Mi segunda tarea', 'segunda descripcion',true)";
+      db.connection.query(sql,(err,rows)=>{
+        if(err) throw err;
+        else{
+          console.log("sucess")
+        }
+      })
+  
 };
 
 exports.delete = (req, res) => {
