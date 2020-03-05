@@ -32,9 +32,12 @@ exports.store = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  tasks = {
-    name: " task " + req.params.id,
-    description: "task description"
-  };
-  res.json({ tasks: tasks });
+  
+  db.connection.query(`DELETE FROM tasks WHERE task_id = ${req.params.id}`,(err,rows) =>{
+    if (err) throw err;
+      res.json((`se borro correctamente la tarea ${req.params.id}`))
+    
+
+  })
+
 };
